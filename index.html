@@ -1063,7 +1063,8 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 // === FORM SUBMISSION → n8n WEBHOOK ===
 // ⚠️ REPLACE THIS URL WITH YOUR n8n WEBHOOK URL
-const WEBHOOK_URL = 'https://YOUR-DOMAIN/webhook/lead-form';
+// ⚠️ FOR TESTING: use webhook-test URL (switch to /webhook/ when you activate the workflow)
+const WEBHOOK_URL = 'https://neversleep.app.n8n.cloud/webhook-test/lead-form';
 
 const form = document.getElementById('lead-form');
 const submitBtn = document.getElementById('submit-btn');
