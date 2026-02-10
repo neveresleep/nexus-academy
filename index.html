@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS Academy — Next-Gen Online Courses</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111118;
+  --bg-card: #16161f;
+  --bg-card-hover: #1c1c28;
+  --accent: #c8a2ff;
+  --accent-bright: #a855f7;
+  --accent-glow: rgba(168, 85, 247, 0.15);
+  --accent-warm: #f0abfc;
+  --text-primary: #f0f0f5;
+  --text-secondary: #9898a8;
+  --text-muted: #5a5a6e;
+  --border: rgba(255,255,255,0.06);
+  --border-accent: rgba(200,162,255,0.2);
+  --gradient-hero: linear-gradient(135deg, #c8a2ff 0%, #a855f7 40%, #7c3aed 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(200,162,255,0.08), rgba(168,85,247,0.04));
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Outfit', -apple-system, sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === NOISE OVERLAY === */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* === AMBIENT GLOW === */
+.ambient-glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+.ambient-glow--1 {
+  top: -200px;
+  right: -100px;
+  background: var(--accent-bright);
+  animation: float-glow 20s ease-in-out infinite;
+}
+.ambient-glow--2 {
+  bottom: 30%;
+  left: -200px;
+  background: #7c3aed;
+  animation: float-glow 25s ease-in-out infinite reverse;
+}
+
+@keyframes float-glow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* === LAYOUT === */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* === NAV === */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 20px 0;
+  transition: all 0.4s var(--ease-out-expo);
+  backdrop-filter: blur(0px);
+}
+.nav.scrolled {
+  padding: 12px 0;
+  background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav__logo {
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.nav__links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+.nav__links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  transition: color 0.3s;
+  position: relative;
+}
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s var(--ease-out-expo);
+}
+.nav__links a:hover { color: var(--text-primary); }
+.nav__links a:hover::after { width: 100%; }
+.nav__cta {
+  padding: 10px 24px;
+  background: transparent;
+  border: 1px solid var(--border-accent);
+  color: var(--accent);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+.nav__cta:hover {
+  background: rgba(200,162,255,0.1);
+  border-color: var(--accent);
+}
+
+/* === HERO === */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-top: 80px;
+}
+.hero__content {
+  max-width: 720px;
+  position: relative;
+  z-index: 1;
+}
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: var(--gradient-subtle);
+  border: 1px solid var(--border-accent);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fade-up 0.8s var(--ease-out-expo) 0.2s forwards;
+}
+.hero__badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent-bright);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fade-up 0.8s var(--ease-out-expo) 0.35s forwards;
+}
+.hero__title em {
+  font-style: italic;
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero__subtitle {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 520px;
+  margin-bottom: 44px;
+  font-weight: 300;
+  opacity: 0;
+  animation: fade-up 0.8s var(--ease-out-expo) 0.5s forwards;
+}
+.hero__actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  opacity: 0;
+  animation: fade-up 0.8s var(--ease-out-expo) 0.65s forwards;
+}
+
+/* === STATS LINE === */
+.hero__stats {
+  display: flex;
+  gap: 48px;
+  margin-top: 72px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border);
+  opacity: 0;
+  animation: fade-up 0.8s var(--ease-out-expo) 0.8s forwards;
+}
+.hero__stat-num {
+  font-size: 2rem;
+  font-weight: 700;
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero__stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* === HERO VISUAL === */
+.hero__visual {
+  position: absolute;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 500px;
+  height: 500px;
+  opacity: 0;
+  animation: fade-scale 1.2s var(--ease-out-expo) 0.4s forwards;
+}
+.hero__orb {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(200,162,255,0.08);
+  animation: rotate-orb 30s linear infinite;
+}
+.hero__orb:nth-child(2) {
+  inset: 40px;
+  animation-duration: 25s;
+  animation-direction: reverse;
+  border-color: rgba(168,85,247,0.1);
+}
+.hero__orb:nth-child(3) {
+  inset: 80px;
+  animation-duration: 20s;
+  border-color: rgba(124,58,237,0.12);
+}
+.hero__orb-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  top: 0;
+  left: 50%;
+  box-shadow: 0 0 20px var(--accent-bright);
+}
+@keyframes rotate-orb { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* === BUTTONS === */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+  text-decoration: none;
+  border: none;
+  letter-spacing: 0.3px;
+}
+.btn--primary {
+  background: var(--gradient-hero);
+  color: #0a0a0f;
+  box-shadow: 0 4px 24px rgba(168,85,247,0.3);
+}
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(168,85,247,0.45);
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn--ghost:hover {
+  color: var(--text-primary);
+  border-color: var(--border-accent);
+  background: rgba(200,162,255,0.05);
+}
+
+/* === SECTIONS === */
+section {
+  padding: 120px 0;
+  position: relative;
+}
+.section-label {
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.section-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  max-width: 540px;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+/* === COURSES GRID === */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 64px;
+}
+.course-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 28px;
+  transition: all 0.4s var(--ease-out-expo);
+  position: relative;
+  overflow: hidden;
+}
+.course-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-hero);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.course-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+}
+.course-card:hover::before { opacity: 1; }
+
+.course-card__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--gradient-subtle);
+  border: 1px solid var(--border-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+}
+.course-card__title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.course-card__desc {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  font-weight: 300;
+}
+.course-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.course-card__duration {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.course-card__price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* === FEATURES === */
+.features {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 48px;
+  margin-top: 64px;
+}
+.feature {
+  display: flex;
+  gap: 20px;
+}
+.feature__num {
+  font-size: 3rem;
+  font-weight: 800;
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.3;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.feature__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.feature__text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+/* === TESTIMONIALS === */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 64px;
+}
+.testimonial {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 28px;
+  transition: all 0.3s;
+}
+.testimonial:hover {
+  border-color: var(--border-accent);
+}
+.testimonial__stars {
+  color: #fbbf24;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+.testimonial__text {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 24px;
+  font-style: italic;
+  font-weight: 300;
+}
+.testimonial__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.testimonial__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gradient-subtle);
+  border: 1px solid var(--border-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.testimonial__name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.testimonial__role {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* === CTA / FORM SECTION === */
+.cta-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+}
+.cta-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.cta-content { max-width: 460px; }
+.cta-content .section-title em {
+  font-style: italic;
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* === FORM === */
+.form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 44px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-hero);
+}
+.form-card__title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.form-card__subtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 32px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 300;
+  transition: all 0.3s;
+  outline: none;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239898a8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+.form-group select option {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-submit {
+  width: 100%;
+  padding: 16px;
+  background: var(--gradient-hero);
+  color: #0a0a0f;
+  border: none;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+  margin-top: 8px;
+  letter-spacing: 0.3px;
+}
+.form-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(168,85,247,0.4);
+}
+.form-submit:active {
+  transform: translateY(0);
+}
+.form-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.form-privacy {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* === SUCCESS STATE === */
+.form-success {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+}
+.form-success__icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--gradient-subtle);
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 24px;
+  animation: success-pop 0.5s var(--ease-spring);
+}
+@keyframes success-pop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+.form-success__title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.form-success__text {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 300;
+}
+
+/* === FOOTER === */
+.footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+}
+.footer .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer__copy {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+.footer__links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+.footer__links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color 0.3s;
+}
+.footer__links a:hover { color: var(--text-secondary); }
+
+/* === ANIMATIONS === */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-scale {
+  from { opacity: 0; transform: translateY(-50%) scale(0.9); }
+  to { opacity: 0.6; transform: translateY(-50%) scale(1); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.7s var(--ease-out-expo);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+  .hero__visual { display: none; }
+  .courses-grid, .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+  .cta-wrapper { grid-template-columns: 1fr; gap: 48px; }
+}
+@media (max-width: 640px) {
+  .courses-grid, .testimonials-grid, .features-grid { grid-template-columns: 1fr; }
+  .hero__stats { flex-direction: column; gap: 24px; }
+  .hero__actions { flex-direction: column; }
+  .form-row { grid-template-columns: 1fr; }
+  .nav__links { display: none; }
+  .form-card { padding: 32px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Ambient glows -->
+<div class="ambient-glow ambient-glow--1"></div>
+<div class="ambient-glow ambient-glow--2"></div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="container">
+    <div class="nav__logo">NEXUS</div>
+    <ul class="nav__links">
+      <li><a href="#courses">Courses</a></li>
+      <li><a href="#features">Why Us</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+    </ul>
+    <a href="#form" class="nav__cta">Enroll Now</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero__content">
+      <div class="hero__badge">Enrollment open — next cohort starts March 1</div>
+      <h1 class="hero__title">Master a <em>future-proof</em> career in 3 months</h1>
+      <p class="hero__subtitle">Hands-on courses in AI, Data Science, and No-Code automation. From your first lesson to a job offer — guided by industry mentors.</p>
+      <div class="hero__actions">
+        <a href="#form" class="btn btn--primary">Get the Syllabus →</a>
+        <a href="#courses" class="btn btn--ghost">Explore Courses</a>
+      </div>
+      <div class="hero__stats">
+        <div>
+          <div class="hero__stat-num">2,400+</div>
+          <div class="hero__stat-label">Graduates</div>
+        </div>
+        <div>
+          <div class="hero__stat-num">94%</div>
+          <div class="hero__stat-label">Job Placement</div>
+        </div>
+        <div>
+          <div class="hero__stat-num">4.9</div>
+          <div class="hero__stat-label">Course Rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative orbs -->
+  <div class="hero__visual">
+    <div class="hero__orb"><div class="hero__orb-dot"></div></div>
+    <div class="hero__orb"><div class="hero__orb-dot"></div></div>
+    <div class="hero__orb"></div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section id="courses">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Programs</div>
+      <h2 class="section-title">Choose Your Path</h2>
+      <p class="section-subtitle">Each course is a structured program with real projects, code reviews, and career support built in.</p>
+    </div>
+    <div class="courses-grid">
+      <div class="course-card reveal">
+        <div class="course-card__icon">🤖</div>
+        <div class="course-card__title">AI & Machine Learning</div>
+        <div class="course-card__desc">Neural networks, NLP, and computer vision. Build 6 portfolio-ready projects from scratch.</div>
+        <div class="course-card__meta">
+          <span class="course-card__duration">12 weeks • online</span>
+          <span class="course-card__price">$1,199</span>
+        </div>
+      </div>
+      <div class="course-card reveal">
+        <div class="course-card__icon">📊</div>
+        <div class="course-card__title">Data Science & Analytics</div>
+        <div class="course-card__desc">Python, SQL, visualization, and statistics. Go from raw data to actionable business insights.</div>
+        <div class="course-card__meta">
+          <span class="course-card__duration">10 weeks • online</span>
+          <span class="course-card__price">$899</span>
+        </div>
+      </div>
+      <div class="course-card reveal">
+        <div class="course-card__icon">⚡</div>
+        <div class="course-card__title">No-Code & Automation</div>
+        <div class="course-card__desc">n8n, Make, Zapier, and AI tools. Automate business workflows without writing a single line of code.</div>
+        <div class="course-card__meta">
+          <span class="course-card__duration">8 weeks • online</span>
+          <span class="course-card__price">$649</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Why NEXUS</div>
+      <h2 class="section-title">Not just courses — a career transformation</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature reveal">
+        <div class="feature__num">01</div>
+        <div>
+          <div class="feature__title">Industry Mentors</div>
+          <div class="feature__text">Learn from practitioners at Google, Meta, and top AI startups. Real-world experience, not textbook theory.</div>
+        </div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature__num">02</div>
+        <div>
+          <div class="feature__title">Projects Over Lectures</div>
+          <div class="feature__text">80% of your time is hands-on practice. Every week you ship a real project with mentor code reviews.</div>
+        </div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature__num">03</div>
+        <div>
+          <div class="feature__title">Career Track</div>
+          <div class="feature__text">Resume prep, mock interviews, and direct access to job openings from our hiring partners.</div>
+        </div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature__num">04</div>
+        <div>
+          <div class="feature__title">Lifetime Community</div>
+          <div class="feature__text">Access to a private alumni network, weekly meetups, and all future course updates — forever.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="reviews">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Testimonials</div>
+      <h2 class="section-title">What Our Graduates Say</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial reveal">
+        <div class="testimonial__stars">★★★★★</div>
+        <div class="testimonial__text">"After the AI & ML course, I landed a role at Google with a 40% salary increase. The portfolio projects genuinely impressed the interviewers."</div>
+        <div class="testimonial__author">
+          <div class="testimonial__avatar">AK</div>
+          <div>
+            <div class="testimonial__name">Anna Kovalenko</div>
+            <div class="testimonial__role">ML Engineer, Google</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal">
+        <div class="testimonial__stars">★★★★★</div>
+        <div class="testimonial__text">"The automation course paid for itself in the first month. I set up workflows for clients using n8n and Make — it's now my full-time specialty."</div>
+        <div class="testimonial__author">
+          <div class="testimonial__avatar">DM</div>
+          <div>
+            <div class="testimonial__name">Daniel Morris</div>
+            <div class="testimonial__role">Freelance Automation Consultant</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal">
+        <div class="testimonial__stars">★★★★★</div>
+        <div class="testimonial__text">"The mentors are the real value here. They don't just grade assignments — they deeply engage with your project and help you grow."</div>
+        <div class="testimonial__author">
+          <div class="testimonial__avatar">ES</div>
+          <div>
+            <div class="testimonial__name">Emily Sanders</div>
+            <div class="testimonial__role">Data Analyst, Stripe</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA + FORM -->
+<section class="cta-section" id="form">
+  <div class="container">
+    <div class="cta-wrapper">
+      <div class="cta-content reveal">
+        <div class="section-label">Get Started</div>
+        <h2 class="section-title">Ready to <em>transform</em> your career?</h2>
+        <p class="section-subtitle" style="margin-top: 20px;">Submit a request and we'll send you the full syllabus and help you choose the right program. The consultation is completely free.</p>
+        <div style="margin-top: 40px; display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px; color: var(--text-secondary); font-size: 0.9rem;">
+            <span style="color: var(--accent);">✓</span> We'll respond within 30 minutes
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; color: var(--text-secondary); font-size: 0.9rem;">
+            <span style="color: var(--accent);">✓</span> We'll match a course to your skill level
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; color: var(--text-secondary); font-size: 0.9rem;">
+            <span style="color: var(--accent);">✓</span> Flexible payment plans available
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card reveal">
+        <div id="form-content">
+          <div class="form-card__title">Get a Free Consultation</div>
+          <div class="form-card__subtitle">Fill out the form and we'll be in touch</div>
+          <form id="lead-form" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Name</label>
+                <input type="text" name="name" placeholder="What's your name?" required>
+              </div>
+              <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" name="phone" placeholder="+1 (___) ___-____" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+              <label>Which course interests you?</label>
+              <select name="course">
+                <option value="" disabled selected>Select a course</option>
+                <option value="AI & Machine Learning">AI & Machine Learning — $1,199</option>
+                <option value="Data Science & Analytics">Data Science & Analytics — $899</option>
+                <option value="No-Code & Automation">No-Code & Automation — $649</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Message (optional)</label>
+              <textarea name="message" placeholder="Tell us about your experience and goals..."></textarea>
+            </div>
+            <input type="hidden" name="source" value="NEXUS Academy Landing">
+            <button type="submit" class="form-submit" id="submit-btn">Submit Request →</button>
+            <div class="form-privacy">By clicking, you agree to our privacy policy</div>
+          </form>
+        </div>
+        <div class="form-success" id="form-success">
+          <div class="form-success__icon">✓</div>
+          <div class="form-success__title">Request Submitted!</div>
+          <div class="form-success__text">We'll get back to you within 30 minutes during business hours. Check your email too — we'll send the course syllabus.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__copy">© 2026 NEXUS Academy. All rights reserved.</div>
+    <ul class="footer__links">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Service</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+// === NAV SCROLL EFFECT ===
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// === REVEAL ON SCROLL ===
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// === FORM SUBMISSION → n8n WEBHOOK ===
+// ⚠️ REPLACE THIS URL WITH YOUR n8n WEBHOOK URL
+const WEBHOOK_URL = 'https://YOUR-DOMAIN/webhook/lead-form';
+
+const form = document.getElementById('lead-form');
+const submitBtn = document.getElementById('submit-btn');
+const formContent = document.getElementById('form-content');
+const formSuccess = document.getElementById('form-success');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Basic validation
+  const name = form.name.value.trim();
+  const phone = form.phone.value.trim();
+  if (!name || !phone) {
+    alert('Please fill in your name and phone number');
+    return;
+  }
+
+  // Disable button
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+
+  // Collect form data
+  const data = {
+    name: name,
+    phone: phone,
+    email: form.email.value.trim() || 'Not provided',
+    message: form.message.value.trim() || `Interested in: ${form.course.value || 'Not selected'}`,
+    source: form.source.value,
+    course: form.course.value || 'Not selected'
+  };
+
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      formContent.style.display = 'none';
+      formSuccess.style.display = 'block';
+    } else {
+      throw new Error('Server error');
+    }
+  } catch (error) {
+    // Show success anyway for demo purposes
+    // In production, replace with proper error handling
+    console.log('Webhook URL not configured or unreachable. Form data:', data);
+    formContent.style.display = 'none';
+    formSuccess.style.display = 'block';
+  }
+});
+
+// === SMOOTH SCROLL ===
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+</body>
+</html>
